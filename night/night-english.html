@@ -298,7 +298,10 @@ textarea {
       <p class="muted" id="summary-meta"></p>
     </div>
     <div class="stack" id="summary-body"></div>
+    <p class="muted" id="notion-msg" aria-live="polite"></p>
     <div class="actions">
+      <button type="button" class="primary" id="btn-notion" hidden>노션에 저장</button>
+      <button type="button" class="ghost" id="btn-copy" hidden>노션용 복사</button>
       <button type="button" class="ghost" id="btn-precise" hidden>더 정밀하게 다시 정리</button>
       <button type="button" class="primary" id="btn-again">처음으로</button>
     </div>
@@ -425,7 +428,9 @@ textarea {
   };
   function savePrefs() { lsSet(PREF_KEY, prefs); }
 
-  var sample = null, tts = null, dict = null;
+  var sample = null, tts = null, dict = null, mcp = null;
+  var NOTION_SERVER = 'Notion';
+  var NOTION_DS = 'b80f4d8f-9416-4671-a113-a98e43a9647f';  // 노션 English Daily > 회화 피드백
   var ready = { sample: false, tts: false, dict: false };
   var S = null;
   var timerId = null;
@@ -491,6 +496,7 @@ textarea {
     if (t && t.setRate) { try { t.setRate(prefs.rate); } catch (e) {} }
     capsChanged();
   });
+  use('mcp').then(function (m) { mcp = m; });
   use('dictation').then(function (d) {
     dict = d; ready.dict = true;
     if (d) { wireDictation(); }
@@ -895,7 +901,7 @@ textarea {
     show('setup');
     renderWeek();
   }
-  var lastSes = null;
+  var lastSes = null, lastRes = null, notionSaved = false;
   function endSession() {
     if (!S || S.ended || S.busy) { return; }
     var ses = S;
@@ -908,6 +914,11 @@ textarea {
     if (n < 1) { backToSetup(); return; }
     logSession(n, secs);
     lastSes = ses;
+    lastRes = null;
+    notionSaved = false;
+    $('notion-msg').textContent = '';
+    $('btn-notion').hidden = true;
+    $('btn-copy').hidden = true;
     show('summary');
     $('summary-meta').textContent = Math.max(1, Math.round(secs / 60)) + '분 · 내가 말한 횟수 ' + n + '번 · Claude 호출 ' + ses.calls + '회';
     runSummary(false);
@@ -920,8 +931,10 @@ textarea {
     var opts = precise ? { modelTier: 'default', cache: false } : { modelTier: 'quick', effort: 'low', cache: false };
     askJson(promptSummary(ses), opts).then(function (r) {
       if (lastSes !== ses) { return; }
+      lastRes = r;
       renderSummary(r);
       $('btn-precise').hidden = precise;
+      showNotionButtons();
       renderWeek();
     }).catch(function (e) {
       if (lastSes !== ses) { return; }
@@ -931,6 +944,82 @@ textarea {
       $('btn-precise').dataset.mode = precise ? 'precise' : 'quick';
     });
   }
+  /* ---------- 노션으로 보내기 / 복사 ---------- */
+  function feedbackRow() {
+    var r = lastRes || {};
+    var ses = lastSes;
+    var date = dayStr(new Date(ses.t0));
+    var mistakes = Array.isArray(r.mistakes) ? r.mistakes.slice(0, 3) : [];
+    var phrases = Array.isArray(r.phrases) ? r.phrases.slice(0, 4).map(String) : [];
+    return {
+      date: date,
+      topic: TOPICS[ses.topic].label,
+      level: LEVEL_LABEL[ses.level],
+      count: ses.turns.filter(function (t) { return t.who === 'Student'; }).length,
+      summary: typeof r.summary_ko === 'string' ? r.summary_ko.trim() : '',
+      fixes: mistakes.filter(Boolean).map(function (m) {
+        return String(m.you || '') + ' → ' + String(m.better || '') + (m.why_ko ? ' (' + String(m.why_ko) + ')' : '');
+      }),
+      phrases: phrases
+    };
+  }
+  function showNotionButtons() {
+    $('btn-notion').hidden = !mcp || notionSaved;
+    $('btn-copy').hidden = false;
+  }
+  function notionErr(e) {
+    var c = e && e.code;
+    if (c === 'approval_required' || c === 'not_in_manifest' || c === 'consent_required') { return '노션 사용을 허용하지 않았어요. 다시 눌러 허용하거나 "노션용 복사"를 써 주세요.'; }
+    if (c === 'server_not_connected' || c === 'selection_required') { return 'claude.ai 설정의 커넥터에서 Notion을 연결해 주세요.'; }
+    if (c === 'needs_reauth') { return 'Notion 연결이 만료됐어요. claude.ai 설정의 커넥터에서 다시 연결해 주세요.'; }
+    if (c === 'tool_error') { return '노션이 저장을 거절했어요. 회화 피드백 표가 지워지지 않았는지 확인해 주세요.'; }
+    return '저장 결과를 확인하지 못했어요. 노션의 회화 피드백 표를 확인한 뒤, 없으면 다시 눌러 주세요.';
+  }
+  function saveToNotion() {
+    if (!mcp || !lastSes || !lastRes || notionSaved) { return; }
+    var row = feedbackRow();
+    var props = {
+      'Name': row.date + ' ' + row.topic,
+      'date:날짜:start': row.date,
+      'date:날짜:is_datetime': 0,
+      '주제': row.topic,
+      '난이도': row.level,
+      '말한 횟수': row.count,
+      '요약': row.summary,
+      '고칠 문장': row.fixes.join('\n'),
+      '다음에 쓸 표현': row.phrases.join('\n')
+    };
+    $('btn-notion').disabled = true;
+    $('notion-msg').textContent = '노션에 저장하는 중이에요…';
+    mcp.callTool(NOTION_SERVER, 'notion-create-pages', {
+      parent: { type: 'data_source_id', data_source_id: NOTION_DS },
+      pages: [{ properties: props }]
+    }, { cache: false }).then(function () {
+      notionSaved = true;
+      $('btn-notion').hidden = true;
+      $('notion-msg').textContent = '노션 English Daily의 회화 피드백 표에 저장했어요.';
+    }).catch(function (e) {
+      $('notion-msg').textContent = notionErr(e);
+    }).finally(function () { $('btn-notion').disabled = false; });
+  }
+  function copyForNotion() {
+    if (!lastSes || !lastRes) { return; }
+    var row = feedbackRow();
+    var lines = [row.date + ' · ' + row.topic + ' · ' + row.level + ' · 말한 횟수 ' + row.count, row.summary];
+    if (row.fixes.length) { lines.push('', '고칠 문장'); row.fixes.forEach(function (f) { lines.push('- ' + f); }); }
+    if (row.phrases.length) { lines.push('', '다음에 쓸 표현'); row.phrases.forEach(function (f) { lines.push('- ' + f); }); }
+    var text = lines.join('\n');
+    var done = function () { $('notion-msg').textContent = '복사했어요. 노션에 붙여 넣어 주세요.'; };
+    var fail = function () {
+      $('notion-msg').textContent = '복사하지 못했어요. 아래 글을 직접 선택해서 복사해 주세요.';
+      var ta = el('textarea', null, text);
+      ta.readOnly = true; ta.rows = 8; ta.setAttribute('aria-label', '복사할 내용');
+      $('summary-body').appendChild(ta);
+      ta.focus(); ta.select();
+    };
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
   function renderSummary(r) {
     var box = $('summary-body');
     box.textContent = '';
@@ -995,6 +1084,8 @@ textarea {
   $('btn-timeup-sum').addEventListener('click', endSession);
   $('btn-again').addEventListener('click', function () { lastSes = null; backToSetup(); });
   $('btn-precise').addEventListener('click', function () { runSummary($('btn-precise').dataset.mode !== 'quick'); });
+  $('btn-notion').addEventListener('click', saveToNotion);
+  $('btn-copy').addEventListener('click', copyForNotion);
   $('btn-mic').addEventListener('click', onMic);
   $('msg').addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(); }
