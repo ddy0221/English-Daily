@@ -1,0 +1,874 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>자기 전 영어 10분</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  /* 레이아웃: 한 칸짜리 세로 화면. 설정 → 대화(타이머 링, 말풍선, 하단 입력) → 정리.
+     밤에 쓰는 화면이라 어두운 한 가지 룩으로 고정한다. */
+  --bg: #0E1220;
+  --surface: #161B2E;
+  --surface-2: #1E2540;
+  --ink: #E9E8F2;
+  --muted: #9AA2BA;
+  --line: #283049;
+  --moon: #E6DDB8;
+  --moon-ink: #1C1A10;
+  --me: #26305A;
+  --danger: #F0A3A3;
+  --font-body: "IBM Plex Sans KR", system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 40px;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--bg);
+}
+h1, h2, h3, p, ul { margin: 0; padding: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--moon);
+  outline-offset: 2px;
+}
+.page { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+.head { display: flex; gap: 14px; align-items: flex-start; }
+.moon { width: 34px; height: 34px; flex: none; fill: var(--moon); margin-top: 4px; }
+h1 { font-size: clamp(24px, 6vw, 30px); font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; text-wrap: balance; }
+.lede { margin-top: 6px; color: var(--muted); font-size: 14px; max-width: 48ch; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+h2 { font-size: 18px; font-weight: 700; }
+.label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 8px; }
+.muted { color: var(--muted); font-size: 13px; }
+
+/* 설정 */
+.choices { display: grid; gap: 8px; }
+.choices.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.choices.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.choice { position: relative; display: block; min-width: 0; }
+.choice input { position: absolute; opacity: 0; pointer-events: none; }
+.choice span {
+  display: block;
+  height: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+.choice b { display: block; font-weight: 600; font-size: 14.5px; }
+.choice small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+.choice input:checked + span { border-color: var(--moon); box-shadow: inset 0 0 0 1px var(--moon); }
+.choice input:focus-visible + span { outline: 2px solid var(--moon); outline-offset: 2px; }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.check, .select { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.check input { width: 18px; height: 18px; accent-color: var(--moon); flex: none; }
+.select select {
+  background: var(--surface-2); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 6px 10px; font: inherit; font-size: 14px;
+}
+.note { font-size: 13px; color: var(--muted); }
+.primary {
+  background: var(--moon); color: var(--moon-ink);
+  border: 0; border-radius: 8px;
+  padding: 12px 18px; font-weight: 600; font-size: 15px;
+}
+.primary:disabled { opacity: 0.45; cursor: default; }
+.ghost { background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; font-size: 14px; }
+.week { font-size: 13px; color: var(--muted); }
+
+/* 대화 */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 6;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.timer { position: relative; width: 56px; height: 56px; flex: none; }
+.timer svg { width: 56px; height: 56px; transform: rotate(-90deg); }
+.timer .track { fill: none; stroke: var(--line); stroke-width: 5; }
+.timer .arc { fill: none; stroke: var(--moon); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 213.63; stroke-dashoffset: 0; }
+.time { position: absolute; inset: 0; display: grid; place-items: center; font: 500 13px var(--font-mono); }
+.bar-text { flex: 1; min-width: 0; }
+.topic { font-weight: 600; }
+.status { font-size: 13px; color: var(--muted); }
+.timeup {
+  margin-top: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--moon);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between;
+  font-size: 14px;
+}
+.log { display: flex; flex-direction: column; gap: 14px; padding: 18px 0 24px; min-height: 36vh; }
+.msg { display: flex; flex-direction: column; gap: 4px; max-width: 88%; scroll-margin-bottom: 220px; min-width: 0; }
+.msg.me { align-self: flex-end; align-items: flex-end; }
+.msg.partner { align-self: flex-start; align-items: flex-start; }
+.bubble {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 16.5px; line-height: 1.55;
+  word-break: normal; overflow-wrap: anywhere; white-space: pre-wrap;
+}
+.partner .bubble { background: var(--surface-2); border: 1px solid var(--line); border-top-left-radius: 4px; }
+.me .bubble { background: var(--me); border-top-right-radius: 4px; }
+.typing .bubble { color: var(--muted); }
+.fix { font-size: 13px; color: var(--muted); word-break: normal; overflow-wrap: anywhere; text-align: right; }
+.fix .t { color: var(--moon); }
+.say { align-self: flex-start; display: inline-flex; background: transparent; border: 0; color: var(--muted); padding: 2px 4px; }
+.say svg { width: 18px; height: 18px; }
+.sys { align-self: center; text-align: center; font-size: 13px; color: var(--muted); max-width: 92%; }
+.sys.err { color: var(--danger); }
+.link { background: none; border: 0; color: var(--muted); text-decoration: underline; padding: 6px 4px; font-size: 13px; }
+
+.composer {
+  position: sticky; bottom: 0; z-index: 6;
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; gap: 8px;
+}
+textarea {
+  width: 100%; resize: none;
+  background: var(--surface-2); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit; font-size: 16px; line-height: 1.5; word-break: normal;
+}
+.row { display: flex; align-items: center; gap: 8px; }
+.grow { flex: 1; }
+.iconbtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; font-size: 14px;
+}
+.iconbtn svg { width: 18px; height: 18px; }
+.iconbtn[aria-pressed="true"] { background: var(--moon); color: var(--moon-ink); border-color: var(--moon); }
+.hintbox {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; font-size: 14px;
+}
+.opt {
+  text-align: left; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 10px; font-size: 15px; word-break: normal;
+}
+
+/* 정리 */
+.sum-text { font-size: 15px; }
+.h3 { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; margin-top: 4px; }
+.mistake { border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 2px; word-break: normal; }
+.you { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+.better { color: var(--moon); font-weight: 500; }
+.why { font-size: 13px; color: var(--muted); word-break: keep-all; }
+.plist { list-style: none; display: flex; flex-direction: column; gap: 6px; word-break: normal; }
+.plist li { background: var(--surface-2); border-radius: 8px; padding: 8px 12px; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+@media (max-width: 420px) {
+  .choice small { font-size: 12px; }
+}
+</style>
+
+<main class="page">
+  <header class="head">
+    <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <div>
+      <h1>자기 전 영어 10분</h1>
+      <p class="lede">Claude가 영어로 말을 걸어요. 말하거나 쓰면서 10분만 이어가고, 끝나면 고칠 문장과 쓸 만한 표현을 정리해 줘요.</p>
+    </div>
+  </header>
+
+  <section id="view-setup" class="card" aria-label="대화 설정">
+    <div>
+      <p class="label" id="lbl-topic">오늘의 주제</p>
+      <div class="choices two" role="radiogroup" aria-labelledby="lbl-topic">
+        <label class="choice"><input type="radio" name="topic" value="day"><span><b>오늘 하루</b><small>하루를 돌아보며 편하게</small></span></label>
+        <label class="choice"><input type="radio" name="topic" value="chat"><span><b>가벼운 일상</b><small>음식, 음악, 여행 같은 잡담</small></span></label>
+        <label class="choice"><input type="radio" name="topic" value="intern"><span><b>인턴 경험 설명</b><small>내가 한 일을 영어로 말하기</small></span></label>
+        <label class="choice"><input type="radio" name="topic" value="interview"><span><b>영어 면접 연습</b><small>IBD, FAS 지원 면접처럼</small></span></label>
+      </div>
+    </div>
+    <div>
+      <p class="label" id="lbl-level">난이도</p>
+      <div class="choices three" role="radiogroup" aria-labelledby="lbl-level">
+        <label class="choice"><input type="radio" name="level" value="easy"><span><b>편하게</b><small>쉬운 문장</small></span></label>
+        <label class="choice"><input type="radio" name="level" value="normal"><span><b>보통</b><small>자연스러운 속도</small></span></label>
+        <label class="choice"><input type="radio" name="level" value="hard"><span><b>면접 수준</b><small>비즈니스 어휘</small></span></label>
+      </div>
+    </div>
+    <div class="opts">
+      <label class="check" id="row-voice" hidden><input type="checkbox" id="opt-voice"> 답변을 음성으로 들려주기</label>
+      <label class="select" id="row-rate" hidden>음성 속도
+        <select id="opt-rate">
+          <option value="0.85">느리게</option>
+          <option value="1">보통</option>
+          <option value="1.15">빠르게</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="opt-fix"> 내 문장의 교정을 바로 보여주기</label>
+    </div>
+    <p class="note" id="cap-note">연결을 확인하는 중이에요…</p>
+    <button type="button" class="primary" id="btn-start" disabled>10분 시작하기</button>
+    <p class="week" id="week"></p>
+  </section>
+
+  <section id="view-session" hidden aria-label="영어 대화">
+    <div class="bar">
+      <div class="timer" aria-hidden="true">
+        <svg viewBox="0 0 80 80"><circle class="track" cx="40" cy="40" r="34"/><circle class="arc" id="arc" cx="40" cy="40" r="34"/></svg>
+        <span class="time" id="time">10:00</span>
+      </div>
+      <div class="bar-text">
+        <p class="topic" id="topic-label"></p>
+        <p class="status" id="status"></p>
+      </div>
+      <button type="button" class="ghost" id="btn-end">끝내고 정리 보기</button>
+    </div>
+    <div class="timeup" id="timeup" hidden>
+      <span>10분이 지났어요. 더 말해도 되고, 지금 정리를 봐도 돼요.</span>
+      <button type="button" class="ghost" id="btn-timeup-sum">정리 보기</button>
+    </div>
+    <div class="log" id="log" role="log" aria-live="polite"></div>
+    <div class="composer">
+      <div class="hintbox" id="hint" hidden></div>
+      <textarea id="msg" rows="2" placeholder="영어로 말하거나 써 보세요. 한국어로 써도 괜찮아요." aria-label="내 답변"></textarea>
+      <div class="row">
+        <button type="button" class="iconbtn" id="btn-mic" aria-pressed="false" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          <span class="lbl">말하기</span>
+        </button>
+        <button type="button" class="link" id="btn-help">막혔어요</button>
+        <span class="grow"></span>
+        <button type="button" class="primary" id="btn-send">보내기</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-summary" class="card" hidden aria-label="오늘의 정리">
+    <div>
+      <h2>오늘의 정리</h2>
+      <p class="muted" id="summary-meta"></p>
+    </div>
+    <div class="stack" id="summary-body"></div>
+    <div class="actions"><button type="button" class="primary" id="btn-again">처음으로</button></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var TOTAL = 600;
+  var CIRC = 2 * Math.PI * 34;
+  var PREF_KEY = 'nightEnglish.prefs';
+  var LOG_KEY = 'nightEnglish.sessions';
+  var reduceMotion = false;
+  try { reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+  var TOPICS = {
+    day: {
+      label: '오늘 하루',
+      brief: 'Help the student reflect on their day in a calm, relaxed way: what happened, what went well, and what they look forward to tomorrow.'
+    },
+    chat: {
+      label: '가벼운 일상',
+      brief: 'Light small talk about everyday life: food, music, weekend plans, travel, hobbies, and the exchange semester in the Netherlands the student will start soon.'
+    },
+    intern: {
+      label: '인턴 경험 설명',
+      brief: 'The student is a finance intern at a private equity firm in Seoul. Act like a friendly interviewer and ask them to explain what they do, the deals they help with, and what they learn. Ask one question at a time and follow up on their answers.'
+    },
+    interview: {
+      label: '영어 면접 연습',
+      brief: 'Run a mock job interview in English for a Korean university student applying to an investment bank or to the advisory (FAS) team of an accounting firm. Ask one question at a time: self-introduction, why this field, a past experience, a strength or weakness, then follow-up questions that probe their answers.'
+    }
+  };
+  var LEVELS = {
+    easy: 'Use short, simple sentences and common words. Be very encouraging.',
+    normal: 'Use natural everyday English at a normal pace.',
+    hard: 'Use natural business-level English with richer vocabulary. Ask probing follow-up questions and push for specific details.'
+  };
+  var LEVEL_LABEL = { easy: '편하게', normal: '보통', hard: '면접 수준' };
+  var SPEAKER_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg>';
+
+  function $(id) { return document.getElementById(id); }
+  function noop() {}
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) { n.className = cls; }
+    if (text != null) { n.textContent = text; }
+    return n;
+  }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function norm(s) { return String(s).toLowerCase().replace(/[^a-z0-9가-힣]+/g, ''); }
+  function lsGet(k, d) {
+    try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; }
+  }
+  function lsSet(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+  }
+
+  var saved = lsGet(PREF_KEY, {}) || {};
+  var prefs = {
+    topic: TOPICS[saved.topic] ? saved.topic : 'day',
+    level: LEVELS[saved.level] ? saved.level : 'easy',
+    voice: saved.voice !== false,
+    fix: saved.fix !== false,
+    rate: Number(saved.rate) || 1
+  };
+  function savePrefs() { lsSet(PREF_KEY, prefs); }
+
+  var sample = null, tts = null, dict = null;
+  var ready = { sample: false, tts: false, dict: false };
+  var S = null;
+  var timerId = null;
+  var committed = '';
+  var listening = false;
+
+  /* ---------- 기능 연결 ---------- */
+  function use(name) {
+    try {
+      if (window.claude && window.claude.use) {
+        return window.claude.use(name).then(function (x) { return x || null; }, function () { return null; });
+      }
+    } catch (e) {}
+    return Promise.resolve(null);
+  }
+
+  function capsChanged() {
+    var all = ready.sample && ready.tts && ready.dict;
+    $('row-voice').hidden = !tts;
+    $('row-rate').hidden = !tts;
+    $('btn-mic').hidden = !dict;
+    $('btn-start').disabled = !sample;
+    var note = $('cap-note');
+    if (!ready.sample) { note.textContent = '연결을 확인하는 중이에요…'; return; }
+    if (!sample) {
+      note.textContent = '이 화면에서는 Claude를 호출할 수 없어요. claude.ai에서 이 페이지를 열어 주세요.';
+      return;
+    }
+    var parts = ['첫 메시지를 보낼 때 Claude 사용을 허용할지 한 번 물어봐요.'];
+    if (all && !dict) { parts.push('이 브라우저에서는 마이크 입력을 쓸 수 없어서 타이핑으로 대화해요.'); }
+    if (all && !tts) { parts.push('음성 재생을 쓸 수 없어서 글로만 보여 줘요.'); }
+    if (all && dict) { parts.push('마이크는 처음 누를 때 허용을 물어봐요.'); }
+    note.textContent = parts.join(' ');
+  }
+
+  use('sample').then(function (s) { sample = s; ready.sample = true; capsChanged(); });
+  use('tts').then(function (t) {
+    tts = t; ready.tts = true;
+    if (t && t.setRate) { try { t.setRate(prefs.rate); } catch (e) {} }
+    capsChanged();
+  });
+  use('dictation').then(function (d) {
+    dict = d; ready.dict = true;
+    if (d) { wireDictation(); }
+    capsChanged();
+  });
+
+  /* ---------- 설정 화면 ---------- */
+  function setRadio(name, val) {
+    var r = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
+    if (r) { r.checked = true; }
+  }
+  function bindPrefs() {
+    setRadio('topic', prefs.topic);
+    setRadio('level', prefs.level);
+    $('opt-voice').checked = prefs.voice;
+    $('opt-fix').checked = prefs.fix;
+    $('opt-rate').value = String(prefs.rate);
+    document.querySelectorAll('input[name="topic"]').forEach(function (r) {
+      r.addEventListener('change', function () { prefs.topic = r.value; savePrefs(); });
+    });
+    document.querySelectorAll('input[name="level"]').forEach(function (r) {
+      r.addEventListener('change', function () { prefs.level = r.value; savePrefs(); });
+    });
+    $('opt-voice').addEventListener('change', function () { prefs.voice = $('opt-voice').checked; savePrefs(); });
+    $('opt-fix').addEventListener('change', function () { prefs.fix = $('opt-fix').checked; savePrefs(); });
+    $('opt-rate').addEventListener('change', function () {
+      prefs.rate = Number($('opt-rate').value) || 1;
+      savePrefs();
+      if (tts && tts.setRate) { try { tts.setRate(prefs.rate); } catch (e) {} }
+    });
+  }
+
+  function dayStr(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function renderWeek() {
+    var list = lsGet(LOG_KEY, []);
+    if (!Array.isArray(list)) { list = []; }
+    var days = {};
+    var now = new Date();
+    for (var i = 0; i < 7; i++) {
+      days[dayStr(new Date(now.getFullYear(), now.getMonth(), now.getDate() - i))] = false;
+    }
+    list.forEach(function (r) { if (r && Object.prototype.hasOwnProperty.call(days, r.d)) { days[r.d] = true; } });
+    var n = Object.keys(days).filter(function (k) { return days[k]; }).length;
+    $('week').textContent = (n > 0
+      ? '이번 주 ' + n + '일 연습했어요.'
+      : '아직 이번 주 기록이 없어요. 10분이면 충분해요.') + ' 기록은 이 브라우저에만 저장돼요.';
+  }
+
+  function show(name) {
+    ['setup', 'session', 'summary'].forEach(function (n) { $('view-' + n).hidden = (n !== name); });
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+
+  /* ---------- 프롬프트 ---------- */
+  function minsLeft() {
+    var elapsed = Math.floor((Date.now() - S.t0) / 1000);
+    return Math.max(0, Math.ceil((TOTAL - elapsed) / 60));
+  }
+  function transcript(withFix) {
+    return S.turns.slice(-24).map(function (t) {
+      var line = (t.who === 'Student' ? 'Student: ' : 'Partner: ') + t.text;
+      if (withFix && t.fix) { line += ' [natural version: ' + t.fix + ']'; }
+      return line;
+    }).join('\n');
+  }
+  function rules() {
+    return [
+      'You are a warm English conversation partner for a Korean university student who is practising spoken English for about 10 minutes before going to sleep. Keep a calm, relaxed, friendly tone.',
+      '',
+      'Topic: ' + TOPICS[S.topic].brief,
+      'Level: ' + LEVELS[S.level],
+      '',
+      'Rules:',
+      '- Reply in natural spoken English: 1 to 3 short sentences, ending with ONE easy follow-up question so the student keeps talking.',
+      '- No lectures, no lists, no markdown, no emoji.',
+      '- If the latest student message has grammar or word-choice mistakes, or is written in Korean, put a corrected, natural English version of what they meant in "fix". Keep their meaning and keep it short. If it was already natural, set "fix" to null.'
+    ].join('\n');
+  }
+  function promptOpen() {
+    return rules() + '\n\nStart the conversation now with one warm greeting sentence and then ONE easy opening question about the topic. Set "fix" to null.\n\nReply with only JSON: {"reply": "your reply", "fix": null}';
+  }
+  function promptTurn(text) {
+    return rules()
+      + '\n- About ' + minsLeft() + ' minute(s) are left. When one minute or less is left, wrap up warmly with a short goodbye and no new question.'
+      + '\n\nConversation so far:\n' + transcript(false)
+      + '\n\nThe student just said:\n' + text
+      + '\n\nReply with only JSON: {"reply": "your reply", "fix": "natural version or null"}';
+  }
+  function promptHelp(last) {
+    return [
+      'A Korean university student is practising English with a conversation partner and is stuck.',
+      'Topic: ' + TOPICS[S.topic].brief,
+      'Level: ' + LEVELS[S.level],
+      '',
+      'The partner just said:',
+      last,
+      '',
+      'Suggest 2 short, natural replies the student could say next, in English, at the right level. Also give ONE short hint in Korean about how to start the reply.',
+      '',
+      'Reply with only JSON: {"hint_ko": "...", "options": ["...", "..."]}'
+    ].join('\n');
+  }
+  function promptSummary() {
+    return [
+      'Review this English practice conversation between a Korean university student (Student) and a conversation partner (Partner). Topic: ' + TOPICS[S.topic].brief,
+      'Be kind, concrete and brief. Suggested natural versions of the student sentences are given in brackets.',
+      '',
+      'Conversation:',
+      transcript(true),
+      '',
+      'Reply with only JSON in this shape:',
+      '{"summary_ko": "2 to 3 sentences in Korean: what went well, and one thing to focus on next time", "mistakes": [{"you": "the student sentence", "better": "a natural version", "why_ko": "short reason in Korean"}], "phrases": ["useful English expressions from this conversation worth remembering"]}',
+      'Use at most 3 mistakes (the most useful ones, or an empty array if there are none) and 3 to 5 phrases.'
+    ].join('\n');
+  }
+
+  function errCopy(e) {
+    var c = e && e.code;
+    if (c === 'not_granted' || c === 'sampling_disabled' || c === 'not_declared' || c === 'capability_disabled') {
+      return 'Claude 사용이 허용되지 않아 대화할 수 없어요. 페이지의 권한 메뉴에서 허용해 주세요.';
+    }
+    if (c === 'rate_limited') { return '요청이 몰려서 잠시 쉬어요. 조금 뒤에 다시 보내 주세요.'; }
+    if (c === 'session_expired') { return '로그인이 만료됐어요. 새로고침해서 다시 로그인해 주세요.'; }
+    return '응답을 받지 못했어요. 한 번 더 시도해 주세요.';
+  }
+
+  /* ---------- 대화 화면 ---------- */
+  function scrollEnd(node) {
+    try { node.scrollIntoView({ block: 'end', behavior: reduceMotion ? 'auto' : 'smooth' }); } catch (e) {}
+  }
+  function refreshStatus() {
+    var t = '';
+    if (S && !S.ended) {
+      if (S.busy) { t = 'Claude가 답을 쓰는 중…'; }
+      else if (listening) { t = '듣는 중…'; }
+      else if (S.timeUp) { t = '10분이 지났어요'; }
+      else { t = '대화 중'; }
+    }
+    $('status').textContent = t;
+  }
+  function setBusy(b) {
+    if (S) { S.busy = b; }
+    $('btn-send').disabled = b;
+    $('btn-help').disabled = b;
+    refreshStatus();
+  }
+  function addPartner(text) {
+    var m = el('div', 'msg partner');
+    m.appendChild(el('div', 'bubble', text));
+    if (tts) {
+      var s = el('button', 'say');
+      s.type = 'button';
+      s.setAttribute('aria-label', '다시 듣기');
+      s.innerHTML = SPEAKER_SVG;
+      s.addEventListener('click', function () { speak(text, true); });
+      m.appendChild(s);
+    }
+    $('log').appendChild(m);
+    scrollEnd(m);
+    return m;
+  }
+  function addMe(text) {
+    var m = el('div', 'msg me');
+    m.appendChild(el('div', 'bubble', text));
+    $('log').appendChild(m);
+    scrollEnd(m);
+    return m;
+  }
+  function addFix(meEl, fix) {
+    var p = el('p', 'fix');
+    p.appendChild(document.createTextNode('더 자연스럽게 '));
+    p.appendChild(el('span', 't', fix));
+    meEl.appendChild(p);
+  }
+  function addTyping() {
+    var m = el('div', 'msg partner typing');
+    m.appendChild(el('div', 'bubble', '…'));
+    $('log').appendChild(m);
+    scrollEnd(m);
+    return m;
+  }
+  function addSys(text, isErr, retryLabel, retryFn) {
+    var d = el('div', 'sys' + (isErr ? ' err' : ''));
+    d.appendChild(document.createTextNode(text));
+    if (retryFn) {
+      var b = el('button', 'link', retryLabel);
+      b.type = 'button';
+      b.addEventListener('click', function () { d.remove(); retryFn(); });
+      d.appendChild(document.createTextNode(' '));
+      d.appendChild(b);
+    }
+    $('log').appendChild(d);
+    scrollEnd(d);
+  }
+  function cleanReply(r) { return r && typeof r.reply === 'string' ? r.reply.trim() : ''; }
+  function lastPartner() {
+    for (var i = S.turns.length - 1; i >= 0; i--) {
+      if (S.turns[i].who === 'Partner') { return S.turns[i].text; }
+    }
+    return '';
+  }
+
+  function speak(text, force) {
+    if (!tts) { return; }
+    if (!force && !prefs.voice) { return; }
+    tts.speak(text, { language: 'en', rate: prefs.rate }).catch(function (e) {
+      if (e && e.code === 'not_granted') { tts = null; capsChanged(); }
+    });
+  }
+
+  function tick() {
+    if (!S) { return; }
+    var elapsed = Math.floor((Date.now() - S.t0) / 1000);
+    var left = Math.max(0, TOTAL - elapsed);
+    $('time').textContent = pad(Math.floor(left / 60)) + ':' + pad(left % 60);
+    $('arc').style.strokeDashoffset = String(CIRC * (1 - left / TOTAL));
+    if (left === 0 && !S.timeUp) {
+      S.timeUp = true;
+      $('timeup').hidden = false;
+      refreshStatus();
+    }
+  }
+
+  function startSession() {
+    if (!sample) { return; }
+    S = { topic: prefs.topic, level: prefs.level, t0: Date.now(), turns: [], busy: false, timeUp: false, ended: false };
+    $('log').textContent = '';
+    $('timeup').hidden = true;
+    $('hint').hidden = true;
+    $('msg').value = '';
+    committed = '';
+    $('topic-label').textContent = TOPICS[S.topic].label + ' · ' + LEVEL_LABEL[S.level];
+    show('session');
+    tick();
+    clearInterval(timerId);
+    timerId = setInterval(tick, 1000);
+    opening();
+  }
+
+  function opening() {
+    var ses = S;
+    setBusy(true);
+    var typing = addTyping();
+    sample.json(promptOpen(), { modelTier: 'quick', cache: false }).then(function (r) {
+      typing.remove();
+      if (S !== ses || ses.ended) { return; }
+      var reply = cleanReply(r);
+      if (!reply) { throw { code: 'invalid_json' }; }
+      ses.turns.push({ who: 'Partner', text: reply });
+      addPartner(reply);
+      speak(reply, false);
+    }).catch(function (e) {
+      typing.remove();
+      if (S !== ses || ses.ended) { return; }
+      addSys(errCopy(e), true, '다시 시도', opening);
+    }).finally(function () {
+      if (S === ses) { setBusy(false); }
+    });
+  }
+
+  async function send() {
+    if (!S || S.busy || S.ended) { return; }
+    var ses = S;
+    if (dict && dict.active()) { try { await dict.stop(); } catch (e) {} }
+    var box = $('msg');
+    var text = box.value.trim();
+    if (!text || S !== ses) { return; }
+    box.value = '';
+    committed = '';
+    $('hint').hidden = true;
+    var meEl = addMe(text);
+    setBusy(true);
+    var typing = addTyping();
+    try {
+      var r = await sample.json(promptTurn(text), { modelTier: 'quick', cache: false });
+      typing.remove();
+      if (S !== ses || ses.ended) { return; }
+      var reply = cleanReply(r);
+      if (!reply) { throw { code: 'invalid_json' }; }
+      var fix = (r && typeof r.fix === 'string') ? r.fix.trim() : '';
+      ses.turns.push({ who: 'Student', text: text, fix: fix });
+      ses.turns.push({ who: 'Partner', text: reply });
+      if (prefs.fix && fix && norm(fix) !== norm(text)) { addFix(meEl, fix); }
+      addPartner(reply);
+      speak(reply, false);
+    } catch (e) {
+      typing.remove();
+      if (S === ses && !ses.ended) {
+        meEl.remove();
+        box.value = text;
+        committed = text;
+        if (!(e && e.code === 'cancelled')) { addSys(errCopy(e), true); }
+      }
+    } finally {
+      if (S === ses) { setBusy(false); }
+    }
+  }
+
+  function askHelp() {
+    if (!S || S.busy || S.ended || !sample) { return; }
+    var last = lastPartner();
+    if (!last) { return; }
+    var ses = S;
+    var box = $('hint');
+    box.hidden = false;
+    box.textContent = '추천 표현을 찾는 중이에요…';
+    $('btn-help').disabled = true;
+    sample.json(promptHelp(last), { modelTier: 'quick', cache: false }).then(function (r) {
+      if (S !== ses) { return; }
+      box.textContent = '';
+      var tip = r && typeof r.hint_ko === 'string' ? r.hint_ko : '';
+      if (tip) { box.appendChild(el('p', null, tip)); }
+      var opts = r && Array.isArray(r.options) ? r.options.slice(0, 3) : [];
+      opts.forEach(function (o) {
+        var text = String(o);
+        var b = el('button', 'opt', text);
+        b.type = 'button';
+        b.addEventListener('click', function () {
+          $('msg').value = text;
+          committed = text;
+          $('msg').focus();
+          box.hidden = true;
+        });
+        box.appendChild(b);
+      });
+      if (!tip && !opts.length) { box.textContent = '추천을 만들지 못했어요. 한 번 더 눌러 주세요.'; }
+    }).catch(function (e) {
+      if (S === ses) { box.textContent = errCopy(e); }
+    }).finally(function () {
+      if (S === ses) { $('btn-help').disabled = S.busy; }
+    });
+  }
+
+  /* ---------- 마이크 ---------- */
+  function renderMic() {
+    var b = $('btn-mic');
+    b.setAttribute('aria-pressed', listening ? 'true' : 'false');
+    b.querySelector('.lbl').textContent = listening ? '멈추기' : '말하기';
+    refreshStatus();
+  }
+  function wireDictation() {
+    dict.onPartial(function (e) {
+      var base = committed;
+      var p = e.text || '';
+      $('msg').value = base + (p ? ((base && !/\s$/.test(base)) ? ' ' : '') + p : '');
+    });
+    dict.onFinal(function (e) {
+      var t = e.text || '';
+      if (!committed.trim()) { t = t.replace(/^\s+/, ''); }
+      committed += t;
+      $('msg').value = committed;
+    });
+    dict.onState(function (e) {
+      listening = e.state === 'listening' || e.state === 'starting';
+      renderMic();
+      if (e.state === 'idle' && (e.reason === 'not_granted' || e.reason === 'unavailable')) {
+        dict = null;
+        capsChanged();
+        if (S) { addSys('마이크를 쓸 수 없어서 타이핑으로 이어가요.', false); }
+      }
+    });
+  }
+  function onMic() {
+    if (!dict) { return; }
+    if (dict.active()) { dict.stop().catch(noop); return; }
+    if (tts) { tts.stop().catch(noop); }
+    committed = $('msg').value;
+    dict.start({ language: 'en' }).catch(function (err) {
+      var c = err && err.code;
+      if (c === 'stopped' || c === 'dismissed') { return; }
+      if (c === 'not_granted' || c === 'unavailable') { return; }
+      if (S) { addSys('마이크를 켜지 못했어요. 다시 눌러 주세요.', true); }
+    });
+  }
+
+  /* ---------- 정리 ---------- */
+  function logSession(n, secs) {
+    var list = lsGet(LOG_KEY, []);
+    if (!Array.isArray(list)) { list = []; }
+    list.push({ d: dayStr(new Date()), turns: n, secs: secs });
+    lsSet(LOG_KEY, list.slice(-60));
+  }
+  function backToSetup() {
+    S = null;
+    clearInterval(timerId);
+    listening = false;
+    renderMic();
+    show('setup');
+    renderWeek();
+  }
+  function endSession() {
+    if (!S || S.ended) { return; }
+    var ses = S;
+    ses.ended = true;
+    clearInterval(timerId);
+    if (tts) { tts.stop().catch(noop); }
+    if (dict && dict.active()) { dict.stop().catch(noop); }
+    var n = ses.turns.filter(function (t) { return t.who === 'Student'; }).length;
+    var secs = Math.min(TOTAL * 3, Math.floor((Date.now() - ses.t0) / 1000));
+    if (n < 1) { backToSetup(); return; }
+    logSession(n, secs);
+    show('summary');
+    $('summary-meta').textContent = Math.max(1, Math.round(secs / 60)) + '분 · 내가 말한 횟수 ' + n + '번';
+    $('summary-body').textContent = '대화를 돌아보며 정리하는 중이에요…';
+    sample.json(promptSummary(), { modelTier: 'default', cache: false }).then(function (r) {
+      renderSummary(r);
+    }).catch(function (e) {
+      $('summary-body').textContent = errCopy(e) + ' 처음으로 돌아가 다시 해 보세요.';
+    });
+  }
+  function renderSummary(r) {
+    var box = $('summary-body');
+    box.textContent = '';
+    var any = false;
+    var s = r && typeof r.summary_ko === 'string' ? r.summary_ko.trim() : '';
+    if (s) { box.appendChild(el('p', 'sum-text', s)); any = true; }
+
+    var mistakes = r && Array.isArray(r.mistakes) ? r.mistakes.slice(0, 3) : [];
+    if (mistakes.length) {
+      var wrap = el('div', 'stack');
+      wrap.appendChild(el('p', 'h3', '고쳐 볼 문장'));
+      mistakes.forEach(function (m) {
+        if (!m) { return; }
+        var d = el('div', 'mistake');
+        d.appendChild(el('p', 'you', String(m.you || '')));
+        d.appendChild(el('p', 'better', String(m.better || '')));
+        if (m.why_ko) { d.appendChild(el('p', 'why', String(m.why_ko))); }
+        wrap.appendChild(d);
+      });
+      box.appendChild(wrap);
+      any = true;
+    }
+
+    var phrases = r && Array.isArray(r.phrases) ? r.phrases.slice(0, 5).map(String) : [];
+    if (phrases.length) {
+      var pw = el('div', 'stack');
+      pw.appendChild(el('p', 'h3', '오늘 쓸 만한 표현'));
+      var ul = el('ul', 'plist');
+      phrases.forEach(function (p) { ul.appendChild(el('li', null, p)); });
+      pw.appendChild(ul);
+      var row = el('div', 'actions');
+      var cb = el('button', 'ghost', '표현 복사');
+      cb.type = 'button';
+      var msg = el('span', 'muted', '');
+      cb.addEventListener('click', function () {
+        var text = phrases.join('\n');
+        try {
+          navigator.clipboard.writeText(text).then(function () { msg.textContent = '복사했어요.'; }, function () { msg.textContent = '복사하지 못했어요. 직접 선택해서 복사해 주세요.'; });
+        } catch (e) { msg.textContent = '복사하지 못했어요. 직접 선택해서 복사해 주세요.'; }
+      });
+      row.appendChild(cb);
+      row.appendChild(msg);
+      pw.appendChild(row);
+      box.appendChild(pw);
+      any = true;
+    }
+    if (!any) { box.textContent = '정리할 내용을 만들지 못했어요. 처음으로 돌아가 다시 해 보세요.'; }
+  }
+
+  /* ---------- 시작 ---------- */
+  bindPrefs();
+  renderWeek();
+  capsChanged();
+
+  $('btn-start').addEventListener('click', startSession);
+  $('btn-send').addEventListener('click', send);
+  $('btn-help').addEventListener('click', askHelp);
+  $('btn-end').addEventListener('click', endSession);
+  $('btn-timeup-sum').addEventListener('click', endSession);
+  $('btn-again').addEventListener('click', backToSetup);
+  $('btn-mic').addEventListener('click', onMic);
+  $('msg').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(); }
+  });
+  $('msg').addEventListener('input', function () {
+    if (dict && dict.active()) { committed = $('msg').value; }
+  });
+})();
+</script>
+
+</body></html>
