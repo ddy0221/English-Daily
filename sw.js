@@ -1,5 +1,5 @@
 // 오프라인 캐시: 앱 파일과 단어 데이터 전체. 파일을 바꾸면 VERSION을 올린다.
-const VERSION = 'ed-v1';
+const VERSION = 'ed-v2';
 const FILES = [
   './',
   'index.html',
