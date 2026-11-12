@@ -37,4 +37,4 @@
 {"word":"go/no-go","pos":"adj","ko":"진행 여부 결정의","ex":"The IC will make a go/no-go decision.","set":"fin"},
 {"word":"pass on","pos":"phrv","ko":"(딜을) 포기하다","ex":"We passed on the deal due to price.","set":"fin"},
 {"word":"pipeline review","pos":"n","ko":"딜 파이프라인 검토","ex":"The team holds a weekly pipeline review.","set":"fin"},
-{"word":"thesis creep","pos":"n","ko":"투자 논리 변질","ex":"Watch out for thesis creep.","set":"fin"}]}
+{"word":"thesis creep","pos":"n","ko":"투자 논리 변질","ex":"Watch out for thesis creep.","set":"fin","review":true}]}

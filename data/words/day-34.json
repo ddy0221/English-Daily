@@ -13,7 +13,7 @@
 {"word":"hit the ground running","pos":"phrase","ko":"바로 성과를 내기 시작하다","ex":"I want to hit the ground running.","set":"talk"},
 {"word":"cross that bridge","pos":"phrase","ko":"그때 가서 생각하다","ex":"We'll cross that bridge when we come to it.","set":"talk"},
 {"word":"the elephant in the room","pos":"phrase","ko":"모두가 알지만 말 안 하는 문제","ex":"The elephant in the room is the budget.","set":"talk"},
-{"word":"a steep curve","pos":"phrase","ko":"가파른 학습 곡선","ex":"Banking has a steep curve at first.","set":"talk"},
+{"word":"a steep curve","pos":"phrase","ko":"가파른 학습 곡선","ex":"Banking has a steep curve at first.","set":"talk","review":true},
 {"word":"on the radar","pos":"phrase","ko":"관심 대상인","ex":"That company is on our radar.","set":"talk"},
 {"word":"nail it","pos":"phrase","ko":"완벽하게 해내다","ex":"You nailed the presentation.","set":"talk"},
 {"word":"pitch in","pos":"phrv","ko":"힘을 보태다","ex":"Everyone pitched in on the deck.","set":"talk"},
