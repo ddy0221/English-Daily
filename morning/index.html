@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F7F6F2">
+<title>아침 단어</title>
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<main>
+  <header class="top">
+    <a class="back" href="../">← 홈</a>
+    <p class="eyebrow" id="hdr"></p>
+    <button class="btn small" id="go-settings" type="button" aria-label="설정">설정</button>
+  </header>
+
+  <!-- 첫 실행 -->
+  <section id="v-setup" class="card" hidden>
+    <h1>아침 단어 시작하기</h1>
+    <p class="muted">하루 40단어(회화 20 + 금융 20), 50일 과정이에요. 시작일을 고르면 날짜에 맞춰 일차가 정해져요.</p>
+    <label class="field">시작일<input type="date" id="setup-date"></label>
+    <button class="btn primary big" id="setup-go" type="button">시작</button>
+  </section>
+
+  <!-- 오늘 -->
+  <section id="v-today" class="stack" hidden>
+    <div class="card">
+      <p class="eyebrow" id="t-eyebrow"></p>
+      <h1 id="t-title"></h1>
+      <p class="muted" id="t-topic"></p>
+      <div class="progress" aria-hidden="true"><i id="t-bar"></i></div>
+      <p class="muted" id="t-status"></p>
+    </div>
+    <button class="btn primary big col" id="go-cards" type="button"><span id="go-cards-label">카드 학습</span><span class="sub" id="go-cards-sub"></span></button>
+    <div class="grid2">
+      <button class="btn col" id="go-quiz" type="button">퀴즈<span class="sub" id="go-quiz-sub"></span></button>
+      <button class="btn col" id="go-listen" type="button">듣기 모드<span class="sub">자동 재생</span></button>
+    </div>
+    <div class="card" id="review-only" hidden>
+      <h2>50일 완주! 복습 전용</h2>
+      <p class="muted">복습 큐에 남은 단어를 간격에 맞춰 보여 줘요. 특정 일차를 다시 보고 싶으면 아래에서 고르세요.</p>
+      <label class="field">다시 볼 일차<select id="redo-day"></select></label>
+      <button class="btn" id="redo-go" type="button">이 일차 다시 학습</button>
+    </div>
+  </section>
+
+  <!-- 카드 -->
+  <section id="v-card" class="stack" hidden>
+    <div class="row"><span class="eyebrow grow" id="c-count"></span><span id="c-tag"></span></div>
+    <div class="progress" aria-hidden="true"><i id="c-bar"></i></div>
+    <div class="card flash" id="c-card" role="button" tabindex="0" aria-describedby="c-hint">
+      <p class="pos" id="c-pos"></p>
+      <p class="word" id="c-word" lang="en"></p>
+      <div id="c-back" class="stack" hidden>
+        <p class="ko" id="c-ko"></p>
+        <p class="ex" id="c-ex" lang="en"></p>
+        <p class="note" id="c-note" lang="en" hidden></p>
+      </div>
+      <p class="muted" id="c-hint">탭해서 뜻 보기</p>
+    </div>
+    <div class="row">
+      <button class="say" id="c-say" type="button" aria-label="발음 듣기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg></button>
+      <button class="say" id="c-say-ex" type="button" aria-label="예문 듣기" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+      <span class="grow"></span>
+      <button class="btn small" id="c-prev" type="button">이전</button>
+    </div>
+    <div class="grid3">
+      <button class="btn grade know" data-g="know" type="button">알아요</button>
+      <button class="btn grade unsure" data-g="unsure" type="button">헷갈려요</button>
+      <button class="btn grade unknown" data-g="unknown" type="button">몰라요</button>
+    </div>
+  </section>
+
+  <!-- 퀴즈 -->
+  <section id="v-quiz" class="stack" hidden>
+    <div class="row"><span class="eyebrow grow" id="q-count"></span><span class="muted" id="q-score"></span></div>
+    <div class="progress" aria-hidden="true"><i id="q-bar"></i></div>
+    <div class="card">
+      <p class="eyebrow" id="q-kind"></p>
+      <p class="prompt" id="q-prompt" lang="en"></p>
+    </div>
+    <div class="stack" id="q-choices"></div>
+    <p class="muted" id="q-feedback" aria-live="polite"></p>
+    <button class="btn primary" id="q-next" type="button" hidden>다음</button>
+  </section>
+
+  <!-- 끝 -->
+  <section id="v-done" class="card" hidden>
+    <h1 id="d-title">오늘 학습 끝!</h1>
+    <p id="d-text"></p>
+    <div class="stack">
+      <button class="btn primary" id="d-quiz" type="button">퀴즈 풀기</button>
+      <button class="btn" id="d-home" type="button">오늘 화면으로</button>
+    </div>
+  </section>
+
+  <!-- 듣기 -->
+  <section id="v-listen" class="stack" hidden>
+    <div class="row"><span class="eyebrow grow" id="l-count"></span></div>
+    <div class="card flash" aria-live="polite">
+      <p class="word" id="l-word" lang="en"></p>
+      <p class="ko" id="l-ko"></p>
+      <p class="ex" id="l-ex" lang="en"></p>
+    </div>
+    <div class="grid3">
+      <button class="btn" id="l-prev" type="button">이전</button>
+      <button class="btn primary" id="l-play" type="button">재생</button>
+      <button class="btn" id="l-next" type="button">다음</button>
+    </div>
+    <label class="field">속도
+      <select id="l-rate"><option value="0.85">0.85 느리게</option><option value="1">1 보통</option><option value="1.15">1.15 빠르게</option></select>
+    </label>
+    <label class="row muted"><input type="checkbox" id="l-ko-on" checked> 한국어 뜻도 읽기</label>
+    <p class="muted" id="l-note">재생 중에는 화면이 꺼지지 않게 유지해요. 화면을 끄면 브라우저에 따라 재생이 멈출 수 있어요.</p>
+    <button class="btn" id="l-exit" type="button">듣기 끝내기</button>
+  </section>
+
+  <!-- 설정 -->
+  <section id="v-settings" class="stack" hidden>
+    <div class="card">
+      <h2>일차 바꾸기</h2>
+      <p class="muted">고른 일차가 오늘이 되도록 시작일을 다시 맞춰요.</p>
+      <label class="field">오늘을 몇 일차로<input type="number" id="s-day" min="1" max="60" inputmode="numeric"></label>
+      <label class="field">또는 시작일<input type="date" id="s-start"></label>
+      <button class="btn primary" id="s-apply" type="button">적용</button>
+    </div>
+    <div class="card">
+      <h2>진도 백업</h2>
+      <p class="muted">진도, 복습 큐, 기록은 이 브라우저에만 저장돼요. 기기를 바꾸기 전에 내보내 두세요.</p>
+      <div class="grid2">
+        <button class="btn" id="s-export" type="button">내보내기</button>
+        <button class="btn" id="s-import" type="button">가져오기</button>
+      </div>
+      <input type="file" id="s-file" accept="application/json,.json" hidden>
+      <p class="muted" id="s-stats"></p>
+    </div>
+    <button class="btn" id="s-close" type="button">닫기</button>
+  </section>
+</main>
+<div class="toast" id="toast" role="status" hidden></div>
+<script type="module" src="../assets/js/morning.js"></script>
+</body>
+</html>

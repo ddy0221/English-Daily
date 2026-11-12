@@ -1,0 +1,105 @@
+/* 아침용 밝고 대비 높은 테마. 모바일(400px) 우선, 한 손 조작. */
+:root {
+  --bg: #F7F6F2;
+  --surface: #FFFFFF;
+  --ink: #111318;
+  --muted: #4A4F5C;
+  --line: #D8D6CE;
+  --accent: #1747D1;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E6ECFC;
+  --good: #0F7A3E;
+  --good-soft: #E3F4EA;
+  --warn: #8A5A00;
+  --warn-soft: #FFF2D6;
+  --bad: #B3261E;
+  --bad-soft: #FCE6E4;
+  --sun: #F2B705;
+  --radius: 14px;
+  --font: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.6 var(--font); word-break: keep-all; overflow-wrap: break-word;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+main { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: 26px; line-height: 1.3; letter-spacing: -0.01em; }
+h2 { font-size: 20px; line-height: 1.35; }
+a { color: var(--accent); }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+[hidden] { display: none !important; }
+
+.top { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+.top .back { text-decoration: none; font-weight: 600; padding: 8px 4px; }
+.eyebrow { font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: 0.04em; }
+.muted { color: var(--muted); font-size: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.stack { display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.grow { flex: 1; }
+
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 12px 18px; border-radius: 12px;
+  border: 2px solid var(--ink); background: var(--surface); font-weight: 700; font-size: 17px;
+  cursor: pointer; text-decoration: none; color: var(--ink); text-align: center;
+}
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.big { min-height: 72px; font-size: 19px; }
+.btn.small { min-height: 40px; padding: 6px 12px; font-size: 15px; border-width: 1.5px; }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn .sub { display: block; font-size: 13px; font-weight: 500; opacity: 0.85; }
+.btn.col { flex-direction: column; gap: 2px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+
+.grade.know { border-color: var(--good); color: var(--good); background: var(--good-soft); }
+.grade.unsure { border-color: var(--warn); color: var(--warn); background: var(--warn-soft); }
+.grade.unknown { border-color: var(--bad); color: var(--bad); background: var(--bad-soft); }
+
+.progress { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .25s; }
+
+/* 단어 카드 */
+.flash { min-height: 300px; justify-content: center; text-align: center; cursor: pointer; user-select: none; border-width: 2px; }
+.flash .word { font-size: 34px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.flash .pos { font-size: 14px; color: var(--muted); font-weight: 600; }
+.flash .ko { font-size: 22px; font-weight: 700; color: var(--accent); }
+.flash .ex { font-size: 17px; }
+.flash .note { font-size: 14px; color: var(--muted); background: var(--bg); border-radius: 8px; padding: 6px 10px; }
+.tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
+.tag.review { background: var(--warn-soft); color: var(--warn); }
+.say { border: 2px solid var(--line); background: var(--surface); border-radius: 99px; width: 48px; height: 48px; display: inline-grid; place-items: center; cursor: pointer; }
+.say svg { width: 22px; height: 22px; }
+
+/* 퀴즈 */
+.choice { text-align: left; justify-content: flex-start; font-weight: 600; border-width: 1.5px; border-color: var(--line); }
+.choice.right { border-color: var(--good); background: var(--good-soft); color: var(--good); }
+.choice.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.prompt { font-size: 24px; font-weight: 800; overflow-wrap: anywhere; }
+.prompt.sentence { font-size: 19px; font-weight: 600; }
+
+/* 홈 */
+.hero { background: var(--ink); color: #fff; border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; gap: 6px; }
+.hero .eyebrow { color: #C9CCD6; }
+.hero .daynum { font-size: 40px; font-weight: 800; line-height: 1.1; }
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; text-align: center; }
+.week .d { font-size: 12px; color: var(--muted); font-weight: 600; }
+.week .m { height: 34px; border-radius: 8px; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 14px; font-weight: 700; }
+.week .m.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.week .m.today { outline: 2px solid var(--ink); outline-offset: 1px; }
+.stat { display: flex; gap: 16px; flex-wrap: wrap; }
+.stat b { font-size: 22px; display: block; }
+.night-btn { background: #141A2E; border-color: #141A2E; color: #F1EBD0; }
+
+label.field { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 15px; }
+input[type=date], input[type=number], select { min-height: 48px; padding: 8px 12px; border: 1.5px solid var(--ink); border-radius: 10px; background: var(--surface); }
+.toast { position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 10px; font-size: 15px; max-width: calc(100% - 32px); z-index: 9; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }

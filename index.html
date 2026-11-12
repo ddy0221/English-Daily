@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F7F6F2">
+<title>English Daily</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<main>
+  <header class="top"><p class="eyebrow">ENGLISH DAILY</p><p class="muted" id="date"></p></header>
+  <section class="hero">
+    <p class="eyebrow" id="h-eyebrow">50일 과정</p>
+    <p class="daynum" id="h-day">시작 전</p>
+    <p id="h-topic"></p>
+  </section>
+  <a class="btn primary big col" href="morning/"><span>아침 단어</span><span class="sub" id="h-morning-sub">출근길 40단어</span></a>
+  <a class="btn big col night-btn" id="night" href="#" rel="noopener"><span>밤 회화</span><span class="sub">자기 전 10분, claude.ai에서 열려요</span></a>
+  <section class="card">
+    <h2>이번 주 기록</h2>
+    <div class="week" id="week" aria-label="이번 주 아침 단어 기록"></div>
+    <div class="stat">
+      <p><b id="st-streak">0</b><span class="muted">연속 일수</span></p>
+      <p><b id="st-days">0</b><span class="muted">완료한 날</span></p>
+      <p><b id="st-queue">0</b><span class="muted">복습 대기</span></p>
+    </div>
+    <p class="muted">기록은 이 브라우저에만 저장돼요. 밤 회화 기록과 Claude 호출 수는 밤 회화 화면에서 보여요.</p>
+  </section>
+</main>
+<script type="module">
+import { NIGHT_URL } from './config.js';
+import { TOTAL_DAYS, streak, weekDates } from './assets/js/core.js';
+import { load, today, currentDay } from './assets/js/store.js';
+const $ = id => document.getElementById(id);
+const S = load(), t = today();
+$('date').textContent = t;
+$('night').href = NIGHT_URL;
+if (S.start) {
+  const d = currentDay(S);
+  $('h-day').textContent = d > TOTAL_DAYS ? '복습 기간' : `${d}일차`;
+  $('h-eyebrow').textContent = d > TOTAL_DAYS ? `50일 완주 · ${d}일째` : `50일 중`;
+  fetch('data/curriculum.md').then(r => r.text()).then(md => {
+    const m = md.match(new RegExp('^' + d + '\\.\\s+(.+)$', 'm')); if (m) $('h-topic').textContent = m[1];
+  }).catch(() => {});
+  const h = S.history[t];
+  if (h && h.done) $('h-morning-sub').textContent = '오늘 완료! 복습·퀴즈 더 하기';
+  else if (h && h.cards) $('h-morning-sub').textContent = `${h.cards}/${h.total}장 진행 중`;
+} else { $('h-topic').textContent = '아침 단어에서 시작일을 정해 주세요.'; }
+const done = Object.entries(S.history).filter(([, h]) => h.done).map(([k]) => k);
+const names = ['월', '화', '수', '목', '금', '토', '일'];
+weekDates(t).forEach((d, i) => {
+  const on = done.includes(d);
+  const c = document.createElement('div');
+  c.innerHTML = `<p class="d">${names[i]}</p><p class="m${on ? ' on' : ''}${d === t ? ' today' : ''}" aria-label="${d} ${on ? '완료' : '미완료'}">${on ? '✓' : d.slice(8)}</p>`;
+  $('week').append(c);
+});
+$('st-streak').textContent = streak(done, t);
+$('st-days').textContent = done.length;
+$('st-queue').textContent = Object.keys(S.queue).length;
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>

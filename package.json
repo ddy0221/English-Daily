@@ -1,0 +1,9 @@
+{
+  "name": "english-daily",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/core.test.mjs tests/quiz.test.mjs",
+    "validate": "node scripts/validate-words.mjs"
+  }
+}
